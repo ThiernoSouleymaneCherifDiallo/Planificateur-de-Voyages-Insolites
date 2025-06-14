@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+yaml_route:
+        path: ../src/Controller/
+        controller: App\Controller\HomeController::nouvelle_fonction_yaml
+       
