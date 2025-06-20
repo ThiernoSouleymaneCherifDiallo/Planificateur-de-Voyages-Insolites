@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Préférences{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">Mes Préférences de Voyage</h1>
+                        <a href="{{ path('app_preference_edit') }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if preference.climate or preference.minBudget or preference.preferredTypesArray|length > 0 %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Préférences générales</h5>
+                                <table class="table table-borderless">
+                                    {% if preference.climate %}
+                                        <tr>
+                                            <td><strong>Climat :</strong></td>
+                                            <td>{{ preference.climate|title }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if preference.minBudget and preference.maxBudget %}
+                                        <tr>
+                                            <td><strong>Budget :</strong></td>
+                                            <td>{{ preference.minBudget }}€ - {{ preference.maxBudget }}€</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if preference.minDuration and preference.maxDuration %}
+                                        <tr>
+                                            <td><strong>Durée :</strong></td>
+                                            <td>{{ preference.minDuration }} - {{ preference.maxDuration }} jours</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if preference.preferredCountry %}
+                                        <tr>
+                                            <td><strong>Pays préféré :</strong></td>
+                                            <td>{{ preference.preferredCountry }}</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Types de voyage</h5>
+                                {% set types = preference.preferredTypesArray %}
+                                {% if types|length > 0 %}
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for type in types %}
+                                            <span class="badge bg-info">{{ type|title }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Aucun type de voyage sélectionné</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="#" class="btn btn-success">
+                                <i class="fas fa-search"></i> Trouver des destinations selon mes préférences
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-cog fa-3x text-muted mb-3"></i>
+                            <h4>Vous n'avez pas encore configuré vos préférences</h4>
+                            <p class="text-muted">Configurez vos préférences pour recevoir des suggestions personnalisées de voyages.</p>
+                            <a href="{{ path('app_preference_edit') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Configurer mes préférences
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('app_preference_edit') }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Modifier mes préférences
+                        </a>
+                        {% if preference.climate or preference.minBudget or preference.preferredTypesArray|length > 0 %}
+                            <a href="#" class="btn btn-success">
+                                <i class="fas fa-search"></i> Rechercher des destinations
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> Retour à l'accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

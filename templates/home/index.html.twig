@@ -1,11 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home test</title>
-</head>
-<body>
-            <h1>BONJOUR DANS LE HOME TEST</h1>
-</body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Planificateur de Voyages Insolites{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-primary mb-4">
+                Découvrez des Voyages Insolites
+            </h1>
+            <p class="lead mb-4">
+                Planifiez vos prochaines aventures avec des suggestions personnalisées basées sur vos préférences. 
+                Climat, budget, durée, type de voyage - nous avons tout prévu !
+            </p>
+            {% if not app.user %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg px-4 me-md-2">
+                        Commencer l'aventure
+                    </a>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-lg px-4">
+                        Se connecter
+                    </a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="#" class="btn btn-primary btn-lg px-4 me-md-2">
+                        Planifier un voyage
+                    </a>
+                    <a href="#" class="btn btn-outline-primary btn-lg px-4">
+                        Voir mes voyages
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-6">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Voyage insolite" class="img-fluid rounded shadow">
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-map-marked-alt fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Destinations Uniques</h5>
+                    <p class="card-text">Découvrez des lieux méconnus et des expériences authentiques loin des sentiers battus.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-magic fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Suggestions Personnalisées</h5>
+                    <p class="card-text">Notre algorithme intelligent vous propose des voyages adaptés à vos goûts et contraintes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-tasks fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Planification Complète</h5>
+                    <p class="card-text">Organisez chaque détail de votre voyage : transport, hébergement, activités et plus encore.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    {% if not app.user %}
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-primary text-white p-5 rounded text-center">
+                    <h2 class="mb-3">Prêt à partir à l'aventure ?</h2>
+                    <p class="lead mb-4">Rejoignez notre communauté de voyageurs et commencez à planifier vos prochaines escapades insolites.</p>
+                    <a href="{{ path('app_register') }}" class="btn btn-light btn-lg">
+                        Créer mon compte gratuitement
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Font Awesome pour les icônes -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %} 

@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de {{ destination.name }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">{{ destination.name }}</h1>
+                        <div>
+                            <a href="{{ path('app_destination_edit', {'id': destination.id}) }}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <a href="{{ path('app_destination_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if destination.imageUrl %}
+                        <div class="text-center mb-4">
+                            <img src="{{ destination.imageUrl }}" alt="{{ destination.name }}" class="img-fluid rounded" style="max-height: 300px;">
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Informations générales</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Pays :</strong></td>
+                                    <td>{{ destination.country }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ville :</strong></td>
+                                    <td>{{ destination.city }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Type :</strong></td>
+                                    <td><span class="badge bg-info">{{ destination.type|title }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Durée recommandée :</strong></td>
+                                    <td>{{ destination.duration }} jours</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Caractéristiques</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Climat :</strong></td>
+                                    <td>{{ destination.climate|title }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Température moyenne :</strong></td>
+                                    <td>{{ destination.averageTemperature }}°C</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Niveau de budget :</strong></td>
+                                    <td>
+                                        {% set budgetClass = destination.budgetLevel == 1 ? 'bg-success' : (destination.budgetLevel == 2 ? 'bg-warning' : 'bg-danger') %}
+                                        <span class="badge {{ budgetClass }}">{{ destination.budgetLevelLabel }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Créée le :</strong></td>
+                                    <td>{{ destination.createdAt|date('d/m/Y H:i') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>Description</h5>
+                        <p class="text-muted">{{ destination.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('app_destination_edit', {'id': destination.id}) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <form method="post" action="{{ path('app_destination_delete', {'id': destination.id}) }}" 
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette destination ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ destination.id) }}">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                        <a href="{{ path('app_destination_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-list"></i> Liste des destinations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

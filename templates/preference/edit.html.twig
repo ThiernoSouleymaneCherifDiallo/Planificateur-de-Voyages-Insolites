@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mes Préférences{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">Modifier mes Préférences de Voyage</h1>
+                        <a href="{{ path('app_preference_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Préférences générales</h5>
+                                
+                                {{ form_row(form.climate, {
+                                    'attr': {'class': 'form-select'}
+                                }) }}
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form_row(form.minBudget, {
+                                            'attr': {'class': 'form-control'}
+                                        }) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_row(form.maxBudget, {
+                                            'attr': {'class': 'form-control'}
+                                        }) }}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form_row(form.minDuration, {
+                                            'attr': {'class': 'form-control'}
+                                        }) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_row(form.maxDuration, {
+                                            'attr': {'class': 'form-control'}
+                                        }) }}
+                                    </div>
+                                </div>
+
+                                {{ form_row(form.preferredCountry, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Types de voyage préférés</h5>
+                                <p class="text-muted small">Cochez les types de voyage qui vous intéressent :</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.adventure, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.adventure, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.culture, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.culture, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.relaxation, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.relaxation, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.gastronomy, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.gastronomy, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.nature, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.nature, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.sport, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.sport, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.urban, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.urban, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            {{ form_widget(form.rural, {
+                                                'attr': {'class': 'form-check-input'}
+                                            }) }}
+                                            {{ form_label(form.rural, null, {
+                                                'label_attr': {'class': 'form-check-label'}
+                                            }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ path('app_preference_index') }}" class="btn btn-secondary me-md-2">
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer mes préférences
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

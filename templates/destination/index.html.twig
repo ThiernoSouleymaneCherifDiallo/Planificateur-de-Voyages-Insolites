@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Destinations{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestion des Destinations</h1>
+        <a href="{{ path('app_destination_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouvelle Destination
+        </a>
+    </div>
+
+    {% if destinations is empty %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Aucune destination n'a été créée pour le moment.
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Pays</th>
+                        <th>Ville</th>
+                        <th>Type</th>
+                        <th>Budget</th>
+                        <th>Durée</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for destination in destinations %}
+                        <tr>
+                            <td>{{ destination.id }}</td>
+                            <td>
+                                <strong>{{ destination.name }}</strong>
+                                {% if destination.imageUrl %}
+                                    <i class="fas fa-image text-muted ms-1" title="Image disponible"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ destination.country }}</td>
+                            <td>{{ destination.city }}</td>
+                            <td>
+                                <span class="badge bg-info">{{ destination.type|title }}</span>
+                            </td>
+                            <td>
+                                {% set budgetClass = destination.budgetLevel == 1 ? 'bg-success' : (destination.budgetLevel == 2 ? 'bg-warning' : 'bg-danger') %}
+                                <span class="badge {{ budgetClass }}">{{ destination.budgetLevelLabel }}</span>
+                            </td>
+                            <td>{{ destination.duration }} jours</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_destination_show', {'id': destination.id}) }}" 
+                                       class="btn btn-sm btn-outline-primary" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_destination_edit', {'id': destination.id}) }}" 
+                                       class="btn btn-sm btn-outline-warning" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('app_destination_delete', {'id': destination.id}) }}" 
+                                          style="display: inline-block;" 
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette destination ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ destination.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

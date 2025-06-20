@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Destination{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">Nouvelle Destination</h1>
+                        <a href="{{ path('app_destination_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.name, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.country, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.city, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.type, {
+                                    'attr': {'class': 'form-select'}
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.climate, {
+                                    'attr': {'class': 'form-select'}
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.averageTemperature, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.budgetLevel, {
+                                    'attr': {'class': 'form-select'}
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.duration, {
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                        </div>
+
+                        {{ form_row(form.imageUrl, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+
+                        {{ form_row(form.description, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ path('app_destination_index') }}" class="btn btn-secondary me-md-2">
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Créer la destination
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
