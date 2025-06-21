@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Communauté des Favoris{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-3">
+                <i class="fas fa-users"></i> Communauté des Favoris
+            </h1>
+            <p class="text-muted">Découvrez les destinations préférées de notre communauté de voyageurs.</p>
+        </div>
+    </div>
+
+    <!-- Destinations les plus favorisées -->
+    <div class="row mb-5">
+        <div class="col">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy"></i> Destinations les plus populaires
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if most_favorited|length > 0 %}
+                        <div class="row">
+                            {% for destination in most_favorited %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        {% if destination.image_url %}
+                                            <img src="{{ destination.image_url }}" class="card-img-top" alt="{{ destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="card-title mb-0">{{ destination.name }}</h6>
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-heart"></i> {{ destination.favoriCount }}
+                                                </span>
+                                            </div>
+                                            <p class="card-text small text-muted">{{ destination.city }}, {{ destination.country }}</p>
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">{{ destination.type|title }}</span>
+                                                {% set budgetClass = destination.budget_level == 1 ? 'bg-success' : (destination.budget_level == 2 ? 'bg-warning' : 'bg-danger') %}
+                                                <span class="badge {{ budgetClass }}">
+                                                    {% if destination.budget_level == 1 %}Économique{% elseif destination.budget_level == 2 %}Moyen{% else %}Luxe{% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid">
+                                                <a href="{{ path('app_public_destination_show', {'id': destination.id}) }}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> Voir détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+                            <h5>Aucune destination favorisée</h5>
+                            <p class="text-muted">Soyez le premier à ajouter des destinations à vos favoris !</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favoris publics récents -->
+    <div class="row">
+        <div class="col">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock"></i> Favoris publics récents
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if public_favoris|length > 0 %}
+                        <div class="row">
+                            {% for favori in public_favoris %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100 border-info">
+                                        {% if favori.destination.imageUrl %}
+                                            <img src="{{ favori.destination.imageUrl }}" class="card-img-top" alt="{{ favori.destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="card-title mb-0">{{ favori.destination.name }}</h6>
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                            </div>
+                                            <p class="card-text small text-muted">{{ favori.destination.city }}, {{ favori.destination.country }}</p>
+                                            
+                                            {% if favori.note %}
+                                                <div class="mb-2">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-sticky-note"></i> "{{ favori.note }}"
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-user"></i> {{ favori.user.firstName }}
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock"></i> {{ favori.getTimeAgo() }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid">
+                                                <a href="{{ path('app_public_destination_show', {'id': favori.destination.id}) }}" class="btn btn-outline-info btn-sm">
+                                                    <i class="fas fa-eye"></i> Voir détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5>Aucun favori public</h5>
+                            <p class="text-muted">Les utilisateurs n'ont pas encore partagé leurs favoris publics.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton retour -->
+    <div class="row mt-4">
+        <div class="col">
+            <a href="{{ path('app_favori_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à mes favoris
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

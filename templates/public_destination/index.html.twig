@@ -12,15 +12,20 @@
                         <h1 class="h3 mb-0">
                             <i class="fas fa-globe"></i> Découvrez nos Destinations
                         </h1>
-                        {% if is_granted('ROLE_USER') %}
-                            <a href="{{ path('app_search_destinations') }}" class="btn btn-primary">
-                                <i class="fas fa-search"></i> Recherche personnalisée
-                            </a>
-                        {% else %}
-                            <a href="{{ path('app_register') }}" class="btn btn-primary">
-                                <i class="fas fa-user-plus"></i> Créer un compte
-                            </a>
-                        {% endif %}
+                        <div class="d-flex gap-2">
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('app_favori_index') }}" class="btn btn-outline-danger">
+                                    <i class="fas fa-heart"></i> Mes Favoris
+                                </a>
+                                <a href="{{ path('app_search_destinations') }}" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Recherche personnalisée
+                                </a>
+                            {% else %}
+                                <a href="{{ path('app_register') }}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i> Créer un compte
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -43,7 +48,16 @@
                                             </div>
                                         {% endif %}
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ destination.name }}</h5>
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title mb-0">{{ destination.name }}</h5>
+                                                {% if is_granted('ROLE_USER') %}
+                                                    <form method="post" action="{{ path('app_favori_toggle', {'id': destination.id}) }}" style="display: inline;">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm favori-btn" data-destination-id="{{ destination.id }}">
+                                                            <i class="fas fa-heart"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
                                             <p class="card-text text-muted">{{ destination.city }}, {{ destination.country }}</p>
                                             
                                             <div class="mb-2">
@@ -80,4 +94,23 @@
         </div>
     </div>
 </div>
+
+{% if is_granted('ROLE_USER') %}
+<script>
+// Animation pour les boutons favoris
+document.addEventListener('DOMContentLoaded', function() {
+    const favoriButtons = document.querySelectorAll('.favori-btn');
+    
+    favoriButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Animation de clic
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+});
+</script>
+{% endif %}
 {% endblock %} 

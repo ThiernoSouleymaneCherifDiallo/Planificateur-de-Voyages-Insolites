@@ -44,6 +44,9 @@
                                 <a class="nav-link" href="{{ path('app_planification_new') }}">Nouveau Voyage</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_favori_index') }}">Mes Favoris</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_preference_index') }}">Mes Préférences</a>
                             </li>
                             <li class="nav-item">
@@ -68,6 +71,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{{ path('app_planification_index') }}">Mes Voyages</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_favori_index') }}">Mes Favoris</a></li>
                                     <li><a class="dropdown-item" href="{{ path('app_preference_index') }}">Mes Préférences</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><hr class="dropdown-divider"></li>

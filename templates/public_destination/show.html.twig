@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ destination.name }} - Détails{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- En-tête de la destination -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">{{ destination.name }}</h1>
+                        {% if is_granted('ROLE_USER') %}
+                            <form method="post" action="{{ path('app_favori_toggle', {'id': destination.id}) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-outline-danger favori-btn" data-destination-id="{{ destination.id }}">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-muted">{{ destination.city }}, {{ destination.country }}</h5>
+                    <p class="lead">{{ destination.description }}</p>
+                </div>
+            </div>
+
+            <!-- Image de la destination -->
+            {% if destination.imageUrl %}
+                <div class="card mb-4">
+                    <img src="{{ destination.imageUrl }}" class="card-img-top" alt="{{ destination.name }}" style="height: 400px; object-fit: cover;">
+                </div>
+            {% endif %}
+
+            <!-- Détails de la destination -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i> Informations sur la destination
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <strong>Climat :</strong>
+                                <span class="badge bg-info">{{ destination.climate|title }}</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Type de voyage :</strong>
+                                <span class="badge bg-primary">{{ destination.type|title }}</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Durée recommandée :</strong>
+                                <span class="badge bg-secondary">{{ destination.duration }} jours</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <strong>Niveau de budget :</strong>
+                                <span class="badge bg-{{ destination.budgetLevel == 1 ? 'success' : (destination.budgetLevel == 2 ? 'warning' : 'danger') }}">
+                                    {{ destination.budgetLevelLabel }}
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Température moyenne :</strong>
+                                <span class="badge bg-warning text-dark">{{ destination.averageTemperature }}°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activités et attractions -->
+            {% if destination.activities %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-hiking"></i> Activités et attractions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ destination.activities }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Conseils pratiques -->
+            {% if destination.practicalTips %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-lightbulb"></i> Conseils pratiques
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ destination.practicalTips }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <!-- Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs"></i> Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if is_granted('ROLE_USER') %}
+                            <a href="{{ path('app_planification_new') }}?destination={{ destination.id }}" class="btn btn-primary">
+                                <i class="fas fa-plane"></i> Planifier un voyage
+                            </a>
+                            <a href="{{ path('app_favori_index') }}" class="btn btn-outline-danger">
+                                <i class="fas fa-heart"></i> Mes favoris
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_register') }}" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Créer un compte
+                            </a>
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_public_destinations') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour aux destinations
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations supplémentaires -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock"></i> Informations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="small text-muted">
+                        {% if destination.createdAt %}
+                            <div class="mb-2">
+                                <strong>Ajoutée le :</strong><br>
+                                {{ destination.createdAt|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+                        {% if destination.updatedAt %}
+                            <div class="mb-2">
+                                <strong>Modifiée le :</strong><br>
+                                {{ destination.updatedAt|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if is_granted('ROLE_USER') %}
+<script>
+// Animation pour les boutons favoris
+document.addEventListener('DOMContentLoaded', function() {
+    const favoriButtons = document.querySelectorAll('.favori-btn');
+    
+    favoriButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Animation de clic
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+});
+</script>
+{% endif %}
+{% endblock %} 

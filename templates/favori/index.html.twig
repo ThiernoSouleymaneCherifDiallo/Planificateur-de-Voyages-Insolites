@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Favoris{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-3">
+                <i class="fas fa-heart"></i> Mes Favoris
+                <span class="badge bg-danger ms-2">{{ favoris|length }}</span>
+            </h1>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_public_destinations') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i> Découvrir des destinations
+                </a>
+                <a href="{{ path('app_favori_community') }}" class="btn btn-outline-info">
+                    <i class="fas fa-users"></i> Communauté
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% if favoris|length > 0 %}
+        <div class="row">
+            {% for favori in favoris %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 border-danger">
+                        {% if favori.destination.imageUrl %}
+                            <img src="{{ favori.destination.imageUrl }}" class="card-img-top" alt="{{ favori.destination.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ favori.destination.name }}</h5>
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-heart"></i>
+                                </span>
+                            </div>
+                            
+                            <p class="card-text text-muted">{{ favori.destination.city }}, {{ favori.destination.country }}</p>
+                            
+                            <div class="mb-3">
+                                <span class="badge bg-info">{{ favori.destination.type|title }}</span>
+                                {% set budgetClass = favori.destination.budgetLevel == 1 ? 'bg-success' : (favori.destination.budgetLevel == 2 ? 'bg-warning' : 'bg-danger') %}
+                                <span class="badge {{ budgetClass }}">{{ favori.destination.budgetLevelLabel }}</span>
+                                <span class="badge bg-secondary">{{ favori.destination.climate|title }}</span>
+                            </div>
+                            
+                            {% if favori.note %}
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-sticky-note"></i> {{ favori.note }}
+                                    </small>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar"></i> {{ favori.destination.duration }} jours
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> {{ favori.getTimeAgo() }}
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a href="{{ path('app_planification_new') }}?destination={{ favori.destination.id }}" class="btn btn-outline-primary btn-sm w-100">
+                                        <i class="fas fa-plane"></i> Planifier
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <form method="post" action="{{ path('app_favori_remove', {'id': favori.destination.id}) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Retirer des favoris ?')">
+                                            <i class="fas fa-heart-broken"></i> Retirer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="row g-2 mt-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#noteModal{{ favori.id }}">
+                                        <i class="fas fa-edit"></i> Note
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <form method="post" action="{{ path('app_favori_toggle_public', {'id': favori.id}) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-{{ favori.isPublic ? 'success' : 'warning' }} btn-sm w-100">
+                                            <i class="fas fa-{{ favori.isPublic ? 'eye' : 'eye-slash' }}"></i> {{ favori.isPublic ? 'Public' : 'Privé' }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal pour éditer la note -->
+                <div class="modal fade" id="noteModal{{ favori.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Modifier la note</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="post" action="{{ path('app_favori_note', {'id': favori.id}) }}">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="note{{ favori.id }}" class="form-label">Note personnelle</label>
+                                        <textarea class="form-control" id="note{{ favori.id }}" name="note" rows="3" placeholder="Ajoutez une note personnelle...">{{ favori.note }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+                        <h5>Aucun favori</h5>
+                        <p class="text-muted">Vous n'avez pas encore ajouté de destinations à vos favoris.</p>
+                        <a href="{{ path('app_public_destinations') }}" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Découvrir des destinations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
