@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche avancée{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter"></i> Critères de recherche
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{{ path('app_search_advanced') }}">
+                        <div class="mb-3">
+                            <label for="climate" class="form-label">Climat</label>
+                            <select class="form-select" id="climate" name="climate">
+                                <option value="">Tous les climats</option>
+                                <option value="tropical" {{ (criteria.climate is defined and criteria.climate == 'tropical') ? 'selected' : '' }}>Tropical</option>
+                                <option value="mediterranean" {{ (criteria.climate is defined and criteria.climate == 'mediterranean') ? 'selected' : '' }}>Méditerranéen</option>
+                                <option value="temperate" {{ (criteria.climate is defined and criteria.climate == 'temperate') ? 'selected' : '' }}>Tempéré</option>
+                                <option value="continental" {{ (criteria.climate is defined and criteria.climate == 'continental') ? 'selected' : '' }}>Continental</option>
+                                <option value="polar" {{ (criteria.climate is defined and criteria.climate == 'polar') ? 'selected' : '' }}>Polaire</option>
+                                <option value="desert" {{ (criteria.climate is defined and criteria.climate == 'desert') ? 'selected' : '' }}>Désertique</option>
+                                <option value="mountain" {{ (criteria.climate is defined and criteria.climate == 'mountain') ? 'selected' : '' }}>Montagneux</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type de voyage</label>
+                            <select class="form-select" id="type" name="type">
+                                <option value="">Tous les types</option>
+                                <option value="adventure" {{ (criteria.type is defined and criteria.type == 'adventure') ? 'selected' : '' }}>Aventure</option>
+                                <option value="culture" {{ (criteria.type is defined and criteria.type == 'culture') ? 'selected' : '' }}>Culture</option>
+                                <option value="relaxation" {{ (criteria.type is defined and criteria.type == 'relaxation') ? 'selected' : '' }}>Détente</option>
+                                <option value="gastronomy" {{ (criteria.type is defined and criteria.type == 'gastronomy') ? 'selected' : '' }}>Gastronomie</option>
+                                <option value="nature" {{ (criteria.type is defined and criteria.type == 'nature') ? 'selected' : '' }}>Nature</option>
+                                <option value="sport" {{ (criteria.type is defined and criteria.type == 'sport') ? 'selected' : '' }}>Sport</option>
+                                <option value="urban" {{ (criteria.type is defined and criteria.type == 'urban') ? 'selected' : '' }}>Urbain</option>
+                                <option value="rural" {{ (criteria.type is defined and criteria.type == 'rural') ? 'selected' : '' }}>Rural</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="budgetLevel" class="form-label">Niveau de budget</label>
+                            <select class="form-select" id="budgetLevel" name="budgetLevel">
+                                <option value="">Tous les budgets</option>
+                                <option value="1" {{ (criteria.budgetLevel is defined and criteria.budgetLevel == 1) ? 'selected' : '' }}>Économique</option>
+                                <option value="2" {{ (criteria.budgetLevel is defined and criteria.budgetLevel == 2) ? 'selected' : '' }}>Moyen</option>
+                                <option value="3" {{ (criteria.budgetLevel is defined and criteria.budgetLevel == 3) ? 'selected' : '' }}>Luxe</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Pays</label>
+                            <input type="text" class="form-control" id="country" name="country" 
+                                   value="{{ criteria.country is defined ? criteria.country : '' }}" placeholder="Ex: France, Japon...">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Rechercher
+                            </button>
+                            <a href="{{ path('app_search_destinations') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-user-cog"></i> Selon mes préférences
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list"></i> Résultats de recherche
+                        {% if destinations|length > 0 %}
+                            <span class="badge bg-primary ms-2">{{ destinations|length }} destination(s)</span>
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if criteria|length == 0 %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5>Recherche avancée</h5>
+                            <p class="text-muted">Utilisez les filtres à gauche pour rechercher des destinations.</p>
+                        </div>
+                    {% elseif destinations is empty %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5>Aucune destination trouvée</h5>
+                            <p class="text-muted">Essayez de modifier vos critères de recherche.</p>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            {% for destination in destinations %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        {% if destination.imageUrl %}
+                                            <img src="{{ destination.imageUrl }}" class="card-img-top" alt="{{ destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ destination.name }}</h6>
+                                            <p class="card-text small text-muted">{{ destination.city }}, {{ destination.country }}</p>
+                                            
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">{{ destination.type|title }}</span>
+                                                {% set budgetClass = destination.budgetLevel == 1 ? 'bg-success' : (destination.budgetLevel == 2 ? 'bg-warning' : 'bg-danger') %}
+                                                <span class="badge {{ budgetClass }}">{{ destination.budgetLevelLabel }}</span>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar"></i> {{ destination.duration }} jours
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-thermometer-half"></i> {{ destination.averageTemperature }}°C
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid">
+                                                <a href="#" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

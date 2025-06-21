@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes nos Destinations{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">
+                            <i class="fas fa-globe"></i> Découvrez nos Destinations
+                        </h1>
+                        {% if is_granted('ROLE_USER') %}
+                            <a href="{{ path('app_search_destinations') }}" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Recherche personnalisée
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_register') }}" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Créer un compte
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if destinations is empty %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-globe fa-3x text-muted mb-3"></i>
+                            <h4>Aucune destination disponible</h4>
+                            <p class="text-muted">Revenez plus tard pour découvrir nos nouvelles destinations.</p>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            {% for destination in destinations %}
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        {% if destination.imageUrl %}
+                                            <img src="{{ destination.imageUrl }}" class="card-img-top" alt="{{ destination.name }}" style="height: 200px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                <i class="fas fa-image fa-3x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ destination.name }}</h5>
+                                            <p class="card-text text-muted">{{ destination.city }}, {{ destination.country }}</p>
+                                            
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">{{ destination.type|title }}</span>
+                                                {% set budgetClass = destination.budgetLevel == 1 ? 'bg-success' : (destination.budgetLevel == 2 ? 'bg-warning' : 'bg-danger') %}
+                                                <span class="badge {{ budgetClass }}">{{ destination.budgetLevelLabel }}</span>
+                                            </div>
+                                            
+                                            <p class="card-text small">{{ destination.description|slice(0, 100) }}...</p>
+                                            
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar"></i> {{ destination.duration }} jours
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-thermometer-half"></i> {{ destination.averageTemperature }}°C
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <div class="d-grid">
+                                                <a href="{{ path('app_public_destination_show', {'id': destination.id}) }}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> Voir détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

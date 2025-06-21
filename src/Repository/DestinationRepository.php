@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Destination;
+use App\Entity\Preference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -108,5 +109,68 @@ class DestinationRepository extends ServiceEntityRepository
         return $qb->orderBy('d.name', 'ASC')
                   ->getQuery()
                   ->getResult();
+    }
+
+    /**
+     * Rechercher des destinations selon les préférences utilisateur
+     */
+    public function findByPreferences(Preference $preference): array
+    {
+        $qb = $this->createQueryBuilder('d');
+
+        // Filtre par climat
+        if ($preference->getClimate()) {
+            $qb->andWhere('d.climate = :climate')
+               ->setParameter('climate', $preference->getClimate());
+        }
+
+        // Filtre par budget (convertir budgetLevel en plage de prix approximative)
+        if ($preference->getMinBudget() && $preference->getMaxBudget()) {
+            // Conversion approximative : 1=économique, 2=moyen, 3=luxe
+            $minBudgetLevel = $this->getBudgetLevelFromAmount($preference->getMinBudget());
+            $maxBudgetLevel = $this->getBudgetLevelFromAmount($preference->getMaxBudget());
+            
+            $qb->andWhere('d.budgetLevel BETWEEN :minBudget AND :maxBudget')
+               ->setParameter('minBudget', $minBudgetLevel)
+               ->setParameter('maxBudget', $maxBudgetLevel);
+        }
+
+        // Filtre par durée
+        if ($preference->getMinDuration() && $preference->getMaxDuration()) {
+            $qb->andWhere('d.duration BETWEEN :minDuration AND :maxDuration')
+               ->setParameter('minDuration', $preference->getMinDuration())
+               ->setParameter('maxDuration', $preference->getMaxDuration());
+        }
+
+        // Filtre par pays préféré
+        if ($preference->getPreferredCountry()) {
+            $qb->andWhere('d.country LIKE :country')
+               ->setParameter('country', '%' . $preference->getPreferredCountry() . '%');
+        }
+
+        // Filtre par types de voyage
+        $preferredTypes = $preference->getPreferredTypesArray();
+        if (!empty($preferredTypes)) {
+            $qb->andWhere('d.type IN (:types)')
+               ->setParameter('types', $preferredTypes);
+        }
+
+        return $qb->orderBy('d.name', 'ASC')
+                  ->getQuery()
+                  ->getResult();
+    }
+
+    /**
+     * Convertir un montant en niveau de budget approximatif
+     */
+    private function getBudgetLevelFromAmount(int $amount): int
+    {
+        if ($amount <= 1000) {
+            return 1; // Économique
+        } elseif ($amount <= 3000) {
+            return 2; // Moyen
+        } else {
+            return 3; // Luxe
+        }
     }
 } 

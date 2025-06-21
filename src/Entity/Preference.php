@@ -17,22 +17,22 @@ class Preference
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $climate = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $minBudget = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $maxBudget = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $minDuration = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $maxDuration = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $preferredType = null;
 
     #[ORM\Column(length: 255, nullable: true)]

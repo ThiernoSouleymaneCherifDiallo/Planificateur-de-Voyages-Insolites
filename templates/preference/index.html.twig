@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <a href="#" class="btn btn-success">
+                            <a href="{{ path('app_search_destinations') }}" class="btn btn-success">
                                 <i class="fas fa-search"></i> Trouver des destinations selon mes préférences
                             </a>
                         </div>
@@ -92,7 +92,7 @@
                             <i class="fas fa-edit"></i> Modifier mes préférences
                         </a>
                         {% if preference.climate or preference.minBudget or preference.preferredTypesArray|length > 0 %}
-                            <a href="#" class="btn btn-success">
+                            <a href="{{ path('app_search_destinations') }}" class="btn btn-success">
                                 <i class="fas fa-search"></i> Rechercher des destinations
                             </a>
                         {% endif %}

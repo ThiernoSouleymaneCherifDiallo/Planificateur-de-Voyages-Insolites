@@ -18,6 +18,7 @@ class PreferenceType extends AbstractType
         $builder
             ->add('climate', ChoiceType::class, [
                 'label' => 'Climat préféré',
+                'required' => false,
                 'choices' => [
                     'Tropical' => 'tropical',
                     'Méditerranéen' => 'mediterranean',
@@ -31,18 +32,22 @@ class PreferenceType extends AbstractType
             ])
             ->add('minBudget', IntegerType::class, [
                 'label' => 'Budget minimum (€)',
+                'required' => false,
                 'attr' => ['min' => 0, 'placeholder' => 'Ex: 500']
             ])
             ->add('maxBudget', IntegerType::class, [
                 'label' => 'Budget maximum (€)',
+                'required' => false,
                 'attr' => ['min' => 0, 'placeholder' => 'Ex: 3000']
             ])
             ->add('minDuration', IntegerType::class, [
                 'label' => 'Durée minimum (jours)',
+                'required' => false,
                 'attr' => ['min' => 1, 'placeholder' => 'Ex: 3']
             ])
             ->add('maxDuration', IntegerType::class, [
                 'label' => 'Durée maximum (jours)',
+                'required' => false,
                 'attr' => ['min' => 1, 'placeholder' => 'Ex: 15']
             ])
             ->add('preferredCountry', TextType::class, [

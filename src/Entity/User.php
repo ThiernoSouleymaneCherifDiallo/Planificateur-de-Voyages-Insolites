@@ -41,11 +41,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Preference::class, orphanRemoval: true)]
     private Collection $preferences;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Planification::class, orphanRemoval: true)]
+    private Collection $planifications;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->roles = ['ROLE_VISITOR'];
         $this->preferences = new ArrayCollection();
+        $this->planifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,6 +182,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($preference->getUser() === $this) {
                 $preference->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Planification>
+     */
+    public function getPlanifications(): Collection
+    {
+        return $this->planifications;
+    }
+
+    public function addPlanification(Planification $planification): static
+    {
+        if (!$this->planifications->contains($planification)) {
+            $this->planifications->add($planification);
+            $planification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanification(Planification $planification): static
+    {
+        if ($this->planifications->removeElement($planification)) {
+            // set the owning side to null (unless already changed)
+            if ($planification->getUser() === $this) {
+                $planification->setUser(null);
             }
         }
 

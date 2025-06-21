@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Planifications de Voyage{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-3">
+                <i class="fas fa-plane"></i> Mes Planifications de Voyage
+            </h1>
+            <a href="{{ path('app_planification_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Planification
+            </a>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <!-- Planifications en cours -->
+    {% if planifications_en_cours|length > 0 %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-play-circle"></i> Voyages en cours
+                            <span class="badge bg-dark ms-2">{{ planifications_en_cours|length }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for planification in planifications_en_cours %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100 border-warning">
+                                        {% if planification.destination.imageUrl %}
+                                            <img src="{{ planification.destination.imageUrl }}" class="card-img-top" alt="{{ planification.destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ planification.destination.name }}</h6>
+                                            <p class="card-text small text-muted">{{ planification.destination.city }}, {{ planification.destination.country }}</p>
+                                            
+                                            <div class="mb-2">
+                                                <span class="badge bg-warning text-dark">{{ planification.getStatutLabel() }}</span>
+                                                <span class="badge bg-info">{{ planification.getDureeSejour() }} jours</span>
+                                            </div>
+                                            
+                                            <div class="small text-muted mb-2">
+                                                <i class="fas fa-calendar"></i> {{ planification.dateDepart|date('d/m/Y') }} - {{ planification.dateRetour|date('d/m/Y') }}
+                                            </div>
+                                            
+                                            {% if planification.budgetEstime %}
+                                                <div class="small text-muted">
+                                                    <i class="fas fa-euro-sign"></i> Budget: {{ planification.budgetEstime }}€
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid gap-1">
+                                                <a href="{{ path('app_planification_show', {'id': planification.id}) }}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Planifications à venir -->
+    {% if planifications_a_venir|length > 0 %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt"></i> Voyages à venir
+                            <span class="badge bg-light text-dark ms-2">{{ planifications_a_venir|length }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for planification in planifications_a_venir %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100 border-primary">
+                                        {% if planification.destination.imageUrl %}
+                                            <img src="{{ planification.destination.imageUrl }}" class="card-img-top" alt="{{ planification.destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ planification.destination.name }}</h6>
+                                            <p class="card-text small text-muted">{{ planification.destination.city }}, {{ planification.destination.country }}</p>
+                                            
+                                            <div class="mb-2">
+                                                <span class="badge bg-primary">{{ planification.getStatutLabel() }}</span>
+                                                <span class="badge bg-info">{{ planification.getDureeSejour() }} jours</span>
+                                            </div>
+                                            
+                                            <div class="small text-muted mb-2">
+                                                <i class="fas fa-calendar"></i> {{ planification.dateDepart|date('d/m/Y') }} - {{ planification.dateRetour|date('d/m/Y') }}
+                                            </div>
+                                            
+                                            {% if planification.budgetEstime %}
+                                                <div class="small text-muted">
+                                                    <i class="fas fa-euro-sign"></i> Budget: {{ planification.budgetEstime }}€
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid gap-1">
+                                                <a href="{{ path('app_planification_show', {'id': planification.id}) }}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Planifications terminées -->
+    {% if planifications_terminees|length > 0 %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-check-circle"></i> Voyages terminés
+                            <span class="badge bg-light text-dark ms-2">{{ planifications_terminees|length }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for planification in planifications_terminees %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100 border-success">
+                                        {% if planification.destination.imageUrl %}
+                                            <img src="{{ planification.destination.imageUrl }}" class="card-img-top" alt="{{ planification.destination.name }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ planification.destination.name }}</h6>
+                                            <p class="card-text small text-muted">{{ planification.destination.city }}, {{ planification.destination.country }}</p>
+                                            
+                                            <div class="mb-2">
+                                                <span class="badge bg-success">{{ planification.getStatutLabel() }}</span>
+                                                <span class="badge bg-info">{{ planification.getDureeSejour() }} jours</span>
+                                            </div>
+                                            
+                                            <div class="small text-muted mb-2">
+                                                <i class="fas fa-calendar"></i> {{ planification.dateDepart|date('d/m/Y') }} - {{ planification.dateRetour|date('d/m/Y') }}
+                                            </div>
+                                            
+                                            {% if planification.budgetEstime %}
+                                                <div class="small text-muted">
+                                                    <i class="fas fa-euro-sign"></i> Budget: {{ planification.budgetEstime }}€
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer bg-transparent p-2">
+                                            <div class="d-grid gap-1">
+                                                <a href="{{ path('app_planification_show', {'id': planification.id}) }}" class="btn btn-outline-success btn-sm">
+                                                    <i class="fas fa-eye"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Message si aucune planification -->
+    {% if planifications_a_venir|length == 0 and planifications_en_cours|length == 0 and planifications_terminees|length == 0 %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-plane fa-3x text-muted mb-3"></i>
+                        <h5>Aucune planification de voyage</h5>
+                        <p class="text-muted">Vous n'avez pas encore créé de planification de voyage.</p>
+                        <a href="{{ path('app_planification_new') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Créer ma première planification
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

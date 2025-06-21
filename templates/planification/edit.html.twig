@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la Planification{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> Modifier la Planification
+                    </h4>
+                    <small class="text-muted">{{ planification.destination.name }}</small>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            {{ form_label(form.destination) }}
+                            {{ form_widget(form.destination) }}
+                            {{ form_errors(form.destination) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.dateDepart) }}
+                            {{ form_widget(form.dateDepart) }}
+                            {{ form_errors(form.dateDepart) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.dateRetour) }}
+                            {{ form_widget(form.dateRetour) }}
+                            {{ form_errors(form.dateRetour) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.budgetEstime) }}
+                            {{ form_widget(form.budgetEstime) }}
+                            {{ form_errors(form.budgetEstime) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.accompagnants) }}
+                            {{ form_widget(form.accompagnants) }}
+                            {{ form_errors(form.accompagnants) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.hebergement) }}
+                            {{ form_widget(form.hebergement) }}
+                            {{ form_errors(form.hebergement) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.transport) }}
+                            {{ form_widget(form.transport) }}
+                            {{ form_errors(form.transport) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.activites) }}
+                        {{ form_widget(form.activites) }}
+                        {{ form_errors(form.activites) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.notes) }}
+                        {{ form_widget(form.notes) }}
+                        {{ form_errors(form.notes) }}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('app_planification_show', {'id': planification.id}) }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-arrow-left"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Validation JavaScript pour les dates
+document.addEventListener('DOMContentLoaded', function() {
+    const dateDepart = document.getElementById('planification_type_form_dateDepart');
+    const dateRetour = document.getElementById('planification_type_form_dateRetour');
+    
+    if (dateDepart && dateRetour) {
+        // Définir la date de retour minimum comme la date de départ
+        dateDepart.addEventListener('change', function() {
+            dateRetour.min = this.value;
+            if (dateRetour.value && dateRetour.value < this.value) {
+                dateRetour.value = this.value;
+            }
+        });
+        
+        // Définir la date de départ maximum comme la date de retour
+        dateRetour.addEventListener('change', function() {
+            dateDepart.max = this.value;
+        });
+    }
+});
+</script>
+{% endblock %} 
